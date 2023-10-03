@@ -1,0 +1,87 @@
+---
+title: "Mini Literate Analysis"
+author: "Shayna Sura"
+format: html
+---
+
+## Introduction
+### About this data
+This data came from the [Arctic Data Center](https://arcticdata.io/catalog/view/doi:10.18739/A25T3FZ8X) and contains seawater chemistry data from the Arctic Ocean near the North Pole collected from 2000 - 2014. The data was retrieved on 2 October 2023.
+
+### Setup
+
+```{r}
+#| echo: false
+
+library(readr)
+library(here)
+
+# the here function from the here package sets the default directory to wherever your Rproject lives.
+```
+
+### Read data
+```{r}
+#| warning: false
+
+# bg_chem <- read_csv("../data/BGchem2008data.csv")
+
+bg_chem <- read_csv(here("data/BGchem2008data.csv"))
+# the here() function from the here package sets the default directory to wherever your Rproject lives.
+# the here() function really helps with reproducibility.
+
+```
+
+Exploring our data
+```{r}
+#| eval: false
+
+colnames(bg_chem)
+str(bg_chem)
+
+summary(bg_chem)
+
+unique(bg_chem$Date)
+#will return the unique values from a column
+
+# View(bg_chem)
+
+```
+
+
+
+## Analysis
+
+### Calculate summary statistics
+```{r}
+
+nitrate <- mean(bg_chem$NO3)
+nitrite <- mean(bg_chem$NO2)
+amm <- mean(bg_chem$NH4)
+phos <- mean(bg_chem$P)
+
+```
+
+
+### Calculate mean of Redfield ratio
+```{r}
+
+ratio <- (nitrate+nitrite+amm)/phos
+
+# round(ratio)
+
+```
+
+
+### Plot Redfield ratio
+```{r}
+plot(bg_chem$P, bg_chem$NO2+bg_chem$NO3+bg_chem$NH4)
+```
+
+
+## Conclusion
+
+You can access variables from your environment in your text! Example:
+
+The Redfield ratio of this data is `r round(ratio, digits=2)` or `r ratio`.
+
+

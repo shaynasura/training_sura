@@ -1,0 +1,75 @@
+---
+title: "Intro to Quarto"
+format: html
+bibliography: references.bib
+execute: 
+  echo: true
+  eval: true
+---
+
+# Header 1
+
+I'm going to **bold** this text.
+
+## Header 2
+
+### Header 3
+
+#### Header 4
+
+Exercise 1 - find some R Markdown formatting help guides
+
+Italic Text Help -\> *Markdown Quick Reference*
+
+Tasks to Do
+
+1.  Practice *italics*\
+    1. Practice *italics*\
+    2. Practice a numbered list
+
+\+ Subheaders
+
+3\. Bold and italicize ***text***
+
+-   list 1
+
+-   list 2
+
+[hyperlink](learning.nceas.ucsb.edu)
+
+-   list 1 alt
+-   list 2 alt
+    -   Item 2a
+
+This is a very important fact [@oke2020].
+
+The square brackets insert the reference entirely in parenthesis. Don't include the square brackets if we want to say
+
+@oke2020 said this important fact.
+
+Inserting Tables is another thing that is easier to do in the Visual Editor (instead of the Source Editor).
+
+| Col1      | Col2   | Col3 |
+|-----------|--------|------|
+| element 1 | lalala |      |
+| element 2 |        |      |
+|           |        |      |
+
+
+
+## Code Chunks
+
+```{r}
+#| echo: false
+
+x <- 4*8
+
+height_vector <- c(5.2, 6.0, 5.7)
+
+# coef <- 3.14
+
+x
+height_vector
+
+```
+
