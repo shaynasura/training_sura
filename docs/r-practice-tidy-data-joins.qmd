@@ -4,7 +4,7 @@ author: "Shayna Sura"
 format: html
 ---
 
-## Set up
+# Set up
 ```{r}
 library(readr)
 library(dplyr)
@@ -16,8 +16,9 @@ library(lubridate) # for bonus question
 Yes, I got a message after loading the libraries. It is telling me that certain functions / objects are masked in the base R because of the package 'lubridate'.
 
 
-## Load data from EDI data portal
+# Load data from EDI data portal
 ```{r}
+#| warning: false
 
 bird_observations <- read_csv("https://portal.edirepository.org/nis/dataviewer?packageid=knb-lter-cap.256.10&entityid=53edaa7a0e083013d9bf20322db1780e")
 
@@ -29,4 +30,142 @@ taxalist <- read_csv("https://portal.edirepository.org/nis/dataviewer?packageid=
 
 ```
 
+<!--
+# Exploring the data
+-->
+```{r}
+#| eval: false
+#| echo: false
+
+head(bird_observations)
+head(surveys)
+head(sites)
+head(taxalist)
+
+str(bird_observations)
+str(surveys)
+str(sites)
+str(taxalist)
+
+unique(sites$point_location)
+unique(sites$park_acreage)
+
+```
+
+# Practice Joins
+
+### Question 2b
+#### Primary Keys
+ - Bird Observations: compound key of **survey_id** + **site_id** + **species_id**
+ - Taxa List: **species_id**
+ 
+ <!--
+ - Surveys: **survey_id**
+ - Sites: **site_id**
+-->
+
+
+#### Foreign Keys
+ - Bird Observations: **species_id**
+ - Taxa List: no foreign key
+ 
+ <!--
+ - Surveys: **site_id**
+ - Sites: **site_id**
+ -->
+
+
+
+## Subsetting the data
+```{r}
+birds_subset <- bird_observations %>% 
+  filter(species_id %in% c("BHCO","RWBL") & site_id %in% c("LI-W", "NU-C"))
+
+```
+
+
+###Question 4a: First, answer: what do you expect a left_join() between birds_subset and sites to contain? Write this in your Quarto Document or tell a neighbor.
+
+Answer: I expect a left_join between burds_subset and sites to contain all of the data in the birds_subset table and that data to now include the data from the sites table (park code, park district, park name, point code, point location, and park acreage).
+
+## Merge data with left-join
+```{r}
+birds_left <- birds_subset %>% 
+  left_join(y = sites, by = "site_id")
+# don't see x = birds_subset here because piping in birds_subset means it automatically assumes birds_subset as x.
+```
+
+### Question 4b: Use a left join to update birds_subset so that it also includes sites information. For each join, include an explicit argument saying which key you are joining by (even if it will just assume the correct one for you). Store the updated data frame as birds_left. Make sure to look at the output - is what it contains consistent with what you expected it to contain?
+
+Answer: Yes, the birds_left table is what I expected from a left join of these 2 data tables. (But only after I removed the x = birds_subset argument from my left_join function.)
+
+
+## Full Join
+
+### Question 5a: First, answer: what do you expect a full_join() between birds_subset and sites to contain? Write this in your Quarto Document or tell a neighbor.
+
+The full_join() will keep all of the data in both the birds_subset and sites tables. So the full_join table will include a lot of NAs from all of the sites in the sites table that didn't have the 2 bird species that we already filtered for in a previous step for the birds_subset table.
+
+```{r}
+birds_full <- birds_subset %>% 
+  full_join(sites, by = "site_id")
+```
+
+
+## Inner Join
+
+### Question 6a: First, answer: what do you expect an inner_join() between birds_subset and taxalist to contain? Write this in your Quarto Document or tell a neighbor.
+
+Answer: An inner_join() between these 2 datasets will only contain those species_id values that are present in both data tables. So there will be less rows than in either table because there are likely some data that do not overlap. Specifically, since I already filtered the birds_subset table to only have 2 bird species, only data for those 2 bird species will be merged from the taxalist table.
+
+```{r}
+birds_inner <- birds_subset %>% 
+  inner_join(y = taxalist, by = "species_id")
+```
+
+
+### Question 6c: What would you get if instead of inner_join() you’d used left_join() for this example? Write code for the left join and check.
+
+Answer: I will get the exact same thing from doing a left_join() and an inner_join() for these 2 data sets.
+
+```{r}
+birds_left2 <- birds_subset %>% 
+  left_join(y = taxalist, by = "species_id")
+```
+
+
+### Question 6d: Why does that make sense for this scenario? In what case would you expect the outcome to differ from an inner_join()? Write this in your Quarto Document or tell a neighbor.
+
+Answer: This makes sense for this scenario because we already filtered the bird_observation data for those species of interest. All of the species_id values in our birds_subset table are present in the taxalist table. We would expect the outcome to differ between an inner_join and left_join if there were some species_id values present in the birds_subset table that were NOT present in the taxalist table. Then those values would be retained and NAs would be entered where the taxalist data should have gone.
+
+
+
+# Practice Wrangling and Joining Data
+
+### Question 7a: Starting with your object bird_observations, rename the notes column to bird_obs_notes (so this doesn’t conflict with notes in the surveys table).
+
+```{r}
+bird_observations <- bird_observations %>% 
+  rename(bird_obs_notes = notes)
+```
+
+
+### Question 7b:
+Create a subset that contains all observations in the birds_observations data frame,
+then join the taxalist, sites and surveys tables to it,
+and finally limit to only columns survey_date, common_name, park_name, bird_count, and observer.
+Hint: What function do you use to subset data by columns?
+
+### COME BACK TO THIS PART ###
+
+I ended up with a site_id.x and a site_id.y from doing all full joins. Need to do something different here.
+
+```{r}
+birds_final <- bird_observations %>% 
+  full_join(y = taxalist, by = "species_id") %>% 
+  full_join(y = sites, by = "site_id") %>% 
+  full_join(y = surveys, by = "survey_id")
+
+
+```
 
