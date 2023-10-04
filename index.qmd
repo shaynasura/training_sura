@@ -3,4 +3,14 @@ title: "coreR Course"
 format: html
 ---
 
-Hello world!
+## Course Lessons
+- [Introduction to Literate Analysis Using Quarto](docs/literate-analysis.html)
+- Cleaning and Wrangling data
+- Data Visualization
+- Functions and packages
+
+
+## Course Practice Sessions
+- [Joins, Cleaning and Wrangling Data](docs/cleaning-wrangling-data.html)
+- Data Viz and Publish to the web
+- Writing functions and making packages
