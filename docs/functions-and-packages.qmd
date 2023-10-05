@@ -1,0 +1,51 @@
+---
+title: "Functions and Packages"
+author: "Shayna Sura"
+format: html
+---
+
+```{r}
+# how to make function(s) available to use in a different script / .qmd file.
+source("../R/fahr_to_celsius.R")
+```
+
+
+
+```{r}
+airtemps <- c(212, 30.3, 78, 32)
+
+airtemps_C <- (airtemps - 32)*5/9
+```
+
+```{r}
+fahr_to_celsius <- function(fahr){
+  celsius <- (fahr - 32) * 5/9
+  return(celsius)
+}
+```
+
+
+```{r}
+# using fahr_to_celsius function with airtemps
+
+celsius_test<-fahr_to_celsius(fahr = airtemps)
+```
+
+
+```{r}
+celsius_to_fahr <- function(celsius){
+  fahr <- (celsius*9/5) + 32
+  return(fahr)
+}
+```
+
+
+```{r}
+#test celsius to fahr function
+result <- celsius_to_fahr(celsius = celsius_test)
+
+result == airtemps
+
+```
+
+
